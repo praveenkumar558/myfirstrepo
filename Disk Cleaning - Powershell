@@ -25,3 +25,54 @@ Write-Host "1.Temp Files have been cleaned"
 }
 Clear-RecycleBin -Force -Verbose -ErrorAction SilentlyContinue
 Write-Host "2.Recycle Bin has been cleaned"
+$path1 = "C:\Windows\Downloaded Program Files"
+Get-childItem $path1 -Force -Recurse -ErrorAction SilentlyContinue |Remove-Item -Recurse -exclude *.ini -ErrorAction SilentlyContinue
+$folderinfo2 = Get-ChildItem $path1 | Measure-Object
+if($folderinfo2.Count -gt 0)
+{
+Write-Host "3.Downloaded Program Files is not cleaned fully"
+}else
+{
+Write-Host "3.Downloaded Program Files has been cleaned fully"
+}
+
+
+$path2 = "C:\Users\*\AppData\Local\Microsoft\Windows\WER\ReportArchive"
+Get-ChildItem $path2 -Force -Recurse -Verbose -ErrorAction SilentlyContinue |Remove-Item -Recurse -exclude *.ini -ErrorAction SilentlyContinue
+$folderinfo3 = Get-ChildItem $path2 | Measure-Object
+if($folderinfo3.Count -gt 0)
+{
+Write-Host "4.Report Archives is not cleaned fully"
+}else
+{
+Write-Host "4.Report Archives has been cleaned fully"
+}
+
+Remove-Item -path C:\Windows\*.dmp -Recurse -ErrorAction SilentlyContinue -force
+Write-Host "5.DMP Files has been removed";
+
+$Path3 = "C:\Windows\offlinewebpages";
+get-childItem $Path3 -Force -Recurse -ErrorAction SilentlyContinue |Remove-Item -Recurse -exclude *.ini -ErrorAction SilentlyContinue
+$folderinfo4 = Get-ChildItem $path2 | Measure-Object
+if($folderinfo4.Count -gt 0)
+{
+Write-Host "5.Offline Webpages is not cleaned fully"
+}else
+{
+Write-Host "5.Offline Webpages has been cleaned fully"
+}
+
+$disk2 = Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'"
+$freespace2=$disk2.FreeSpace;
+$inmb2=$freespace2/1GB;
+$mb2= "{0:N0}" -f $inmb2;
+Write-Host "Free Space in the Disk C is $mb2 MB";
+if($mb -gt 100)
+{
+Write-Host "The Disk has enough Free Space"
+break;
+}
+else
+{
+Write-Host "The Disk Needs to be cleaned to cleaned manually"
+}
