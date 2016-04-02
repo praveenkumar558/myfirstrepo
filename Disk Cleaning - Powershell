@@ -1,0 +1,27 @@
+$disk = Get-WmiObject Win32_LogicalDisk -Filter "DeviceID='C:'"
+$freespace=$disk.FreeSpace;
+$inmb=$freespace/1GB;
+$mb= "{0:N0}" -f $inmb;
+Write-Host "Free Space in the Disk C is $mb MB";
+if($mb -gt 100)
+{
+Write-Host "The Disk has enough Free Space"
+break;
+}
+else
+{
+Write-Host "The Disk Needs to be cleaned"
+}
+Write-Host "+++++++++++++++++++++++++++++"
+Write-Host "Disk Cleaning Activity is Initiated";
+Remove-Item $TEMP -Force -Verbose -ErrorAction SilentlyContinue
+$folderinfo = Get-ChildItem $TEMP | Measure-Object
+if($folderinfo.Count -gt 0)
+{
+Write-Host "1.Temp Files are not cleaned"
+}else
+{
+Write-Host "1.Temp Files have been cleaned"
+}
+Clear-RecycleBin -Force -Verbose -ErrorAction SilentlyContinue
+Write-Host "2.Recycle Bin has been cleaned"
